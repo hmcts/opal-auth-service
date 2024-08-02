@@ -1,5 +1,3 @@
-version: '2.1'
-
 services:
   opal-user-service:
     build:
@@ -22,5 +20,23 @@ services:
       - LOGBACK_REQUIRE_THREAD
       - LOGBACK_REQUIRE_ALERT_LEVEL=false
       - LOGBACK_REQUIRE_ERROR_CODE=false
+      - OPAL_USER_DB_HOST=opal-user-db
+    
     ports:
       - $SERVER_PORT:$SERVER_PORT
+    
+  opal-user-db:
+    container_name: opal-user-db
+    image: postgres:15
+    restart: always
+    environment:
+      - POSTGRES_DB=opal-user-db
+      - POSTGRES_USER=opal-user
+      - POSTGRES_PASSWORD=opal-user
+    ports:
+      - "5434:5432"
+    volumes:
+      - opal-database-data:/var/lib/postgresql/data
+  
+volumes:
+  opal-database-data:
